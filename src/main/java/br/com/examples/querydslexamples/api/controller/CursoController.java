@@ -1,15 +1,13 @@
 package br.com.examples.querydslexamples.api.controller;
 
-import br.com.examples.querydslexamples.domain.model.Curso;
 import br.com.examples.querydslexamples.domain.service.CursoService;
-import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -22,7 +20,10 @@ public class CursoController {
     }
 
     @GetMapping("cursos")
-    public ResponseEntity<?> findAll(@RequestParam(required = false) MultiValueMap<String, String> parameters, Pageable pageable){
+    public ResponseEntity<?> findAll(@RequestParam(name = "unpaged", required = false) boolean unpaged, @RequestParam(required = false) MultiValueMap<String, String> parameters, Pageable pageable){
+        if(unpaged){
+            pageable = Pageable.unpaged();
+        }
         return ResponseEntity.ok(cursoService.findAll(parameters, pageable));
     }
 }
